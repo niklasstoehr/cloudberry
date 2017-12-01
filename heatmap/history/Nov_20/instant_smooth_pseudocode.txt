@@ -1,0 +1,21 @@
+
+int increment = 1
+geoMatrix[x][y] += increment;
+smooth(x, y, increment);
+
+
+void smooth (int x, int y, int increment) {
+	
+	increment = increment / 2			
+
+	geoMatrix[x+1][y] += increment
+	geoMatrix[x+1][y+1] += increment
+	geoMatrix[x-1][y] += increment
+	geoMatrix[x][y-1] += increment
+	
+	if ( increment >= 0.25) { 
+		
+		smooth(x+1, y, increment);
+		smooth(x, y+1, increment);
+		smooth(x-1, y, increment);
+		smooth(x, y-1, increment);

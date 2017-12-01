@@ -1,0 +1,83 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf100
+{\fonttbl\f0\fnil\fcharset0 Menlo-Regular;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red255\green255\blue255;}
+{\*\expandedcolortbl;;\csgray\c0;\csgray\c100000;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx560\tx1120\tx1680\tx2240\tx2800\tx3360\tx3920\tx4480\tx5040\tx5600\tx6160\tx6720\pardirnatural\partightenfactor0
+
+\f0\fs22 \cf2 \cb3 \CocoaLigature0 macbookpro:cloudberry macbookpro$ ./script/dockerClean.sh\
+\
+docker volume create --driver local --name $docName\
+\
+echo "build the cc"\
+docker run -d --name=cc \\\
+   -p 19000:19000 -p 19001:19001 -p 19002:19002 -p 19006:19006 \\\
+    jianfeng/asterixdb cc $ncs\
+\
+ccip=$(docker inspect -f '\{\{range .NetworkSettings.Networks\}\}\{\{.IPAddress\}\}\{\{end\}\}' cc)\
+\
+sleep 2s\
+\
+for ((n=1; n <= ncs; n=n+1 ))\
+do\
+    echo "build nc$\{n\}"\
+    #port=$((10000+n)) # these ports are used for feed\
+    docker run -d -v $docName:/db -p 10001:10001 -p 10002:10002 -p 10003:10003 -p 10004:10004 -e NC_JVM_MEM=$NC_JVM_MEM \\\
+      --name "nc$\{n\}" \\\
+        jianfeng/asterixdb nc $\{n\} $ccip $ncs\
+doneError response from daemon: No such container: cc\
+Error response from daemon: No such container: nc1\
+Error response from daemon: No such container: cc\
+Error response from daemon: No such container: nc1\
+Error response from daemon: get dbstore: no such volume\
+Error: No such image: jianfeng/asterixdb\
+macbookpro:cloudberry macbookpro$ \
+macbookpro:cloudberry macbookpro$ docker volume create --driver local --name $docName\
+dbstore\
+macbookpro:cloudberry macbookpro$ \
+macbookpro:cloudberry macbookpro$ echo "build the cc"\
+build the cc\
+macbookpro:cloudberry macbookpro$ docker run -d --name=cc \\\
+>    -p 19000:19000 -p 19001:19001 -p 19002:19002 -p 19006:19006 \\\
+>     jianfeng/asterixdb cc $ncs\
+Unable to find image 'jianfeng/asterixdb:latest' locally\
+latest: Pulling from jianfeng/asterixdb\
+93857f76ae30: Pull complete \
+60dc950ecaab: Pull complete \
+37116e8a2958: Pull complete \
+724f9a4c4e97: Pull complete \
+3585d5520acf: Pull complete \
+7be28a05e8d3: Pull complete \
+518927800aaf: Pull complete \
+4bd04fea777a: Pull complete \
+edec9c9443c4: Pull complete \
+cb73c138058a: Pull complete \
+d34a87b64eac: Pull complete \
+cc4e926609bf: Pull complete \
+a2cd0b1d7020: Pull complete \
+51f90b38c9a8: Pull complete \
+c92224f96e1b: Pull complete \
+196eedbe2b7e: Pull complete \
+0e92ad4637db: Pull complete \
+c21f4e1da9fd: Pull complete \
+ad873f4f7bca: Pull complete \
+8295a15b1da6: Pull complete \
+1e0a24f6dcd7: Pull complete \
+ffedd2e24ecf: Pull complete \
+Digest: sha256:e2580b5dd5981a42714d97a096e3dc3ab254e4d255ecad8de412cc63b8c7c463\
+Status: Downloaded newer image for jianfeng/asterixdb:latest\
+4f20db33c7003280d6bfa9191bf582b4e7c395006bb9f3a1676f618053d0a973\
+macbookpro:cloudberry macbookpro$ \
+macbookpro:cloudberry macbookpro$ ccip=$(docker inspect -f '\{\{range .NetworkSettings.Networks\}\}\{\{.IPAddress\}\}\{\{end\}\}' cc)\
+macbookpro:cloudberry macbookpro$ \
+macbookpro:cloudberry macbookpro$ sleep 2s\
+macbookpro:cloudberry macbookpro$ \
+macbookpro:cloudberry macbookpro$ for ((n=1; n <= ncs; n=n+1 ))\
+> do\
+>     echo "build nc$\{n\}"\
+>     #port=$((10000+n)) # these ports are used for feed\
+>     docker run -d -v $docName:/db -p 10001:10001 -p 10002:10002 -p 10003:10003 -p 10004:10004 -e NC_JVM_MEM=$NC_JVM_MEM \\\
+>       --name "nc$\{n\}" \\\
+>         jianfeng/asterixdb nc $\{n\} $ccip $ncs\
+> done\
+}

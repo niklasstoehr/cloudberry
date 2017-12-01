@@ -1,0 +1,16 @@
+localhost:19001
+
+
+use twitter;
+
+select spatial_cell(coordinate, create_point(-124.7844079,24.7433195), 5.0, 5.0) as cell, count(*) as cnt from ds_tweet group by cell;
+
+
+
+
+https://ci.apache.org/projects/asterixdb/sqlpp/builtins.html#SpatialFunctions
+
+cat <<‘EOF’ | curl -XPOST -d @- http://localhost:19002/query/service
+use twitter;
+select spatial_cell(coordinate, create_point(-124.7844079,24.7433195), 5.0, 5.0) as cell, count(*) as cnt from ds_tweet where coordinate is not UNKNOWN group by cell;
+EOF
